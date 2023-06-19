@@ -1,25 +1,24 @@
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import { 
+  AppBar,
+  Toolbar,
+  Typography
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Title bar component
  */
-export default function TitleBar (props) {
+export default function TitleBar () {
 
-  const drawerWidth = props.drawerWidth;
+  const {t} = useTranslation();
 
   return (
     <AppBar
       position="fixed"
-      sx={{ 
-        width: `calc(100% - ${drawerWidth}px)`, 
-        ml: `${drawerWidth}px`
-      }}
     >
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          Spyglass
+          {t('spyglass')}
         </Typography>
       </Toolbar>
     </AppBar>

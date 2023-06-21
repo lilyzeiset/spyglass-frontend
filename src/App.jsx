@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-// import store from './reduxstore.js'
+import store from './utils/reduxstore'
 
 import { I18nextProvider } from "react-i18next";
 import i18n from "./utils/i18n";
@@ -27,7 +27,7 @@ function App() {
   });
 
   return (
-    // <Provider store={store}>
+    <Provider store={store}>
     <ThemeProvider theme={mdTheme}>
     <I18nextProvider i18n={i18n}>
     <BrowserRouter>
@@ -49,7 +49,7 @@ function App() {
     </BrowserRouter>
     </I18nextProvider>
     </ThemeProvider>
-    // </Provider>
+    </Provider>
   )
 }
 

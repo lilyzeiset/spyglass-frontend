@@ -29,7 +29,7 @@ export default function Goals() {
     isError: fetchUserinfoError
   } = useFindUserInfoQuery();
 
-  if (fetchUserInfoError || fetchGoalsError) {
+  if (fetchUserinfoError || fetchGoalsError) {
     window.location.replace('http://localhost:8080/signin');
     return null;
   }

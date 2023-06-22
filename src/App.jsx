@@ -9,8 +9,7 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./utils/i18n";
 
 import TitleBar from './components/TitleBar';
-import Login from './components/Login';
-import Register from './components/Register';
+import Home from './components/Home';
 import Goals from './components/Goals';
 
 function App() {
@@ -48,9 +47,8 @@ function App() {
         >
           <Toolbar /> {/* preserves space taken up by titlebar */}
           <Routes>
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/' element={<Goals />} />
+            <Route path='/' element={<Home />} />
+            <Route path='/goals' element={<Goals />} />
           </Routes>
         </Box>
       </Box>

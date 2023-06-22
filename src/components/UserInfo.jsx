@@ -12,8 +12,9 @@ import {
 import { Logout } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useFindUserInfoQuery } from '../api/userApi';
+import { useFindUserInfoQuery, useLogoutMutation } from '../api/userApi';
 
 export default function UserInfo() {
 
@@ -21,6 +22,7 @@ export default function UserInfo() {
    * Utils
    */
   const {t, i18n} = useTranslation();
+  const navigate = useNavigate();
 
   /**
    * States
@@ -28,12 +30,15 @@ export default function UserInfo() {
   const [menuAnchor, setMenuAnchor] = useState(null);
 
   /**
-   * API Call
+   * API Calls
    */
   const {
     data: userinfo,
-    isError
+    isError,
+    isFetching
   } = useFindUserInfoQuery();
+
+  const [logout] = useLogoutMutation();
 
   /**
    * Handles displaying menu
@@ -53,13 +58,18 @@ export default function UserInfo() {
    * Handles logging out
    */
   function handleLogout() {
-
+    logout()
+    .unwrap()
+    .then(() => {
+      navigate('/');
+      window.location.reload();
+    })
   }
 
   /**
    * Display nothing if not logged in
    */
-  if (isError) {
+  if (isError || isFetching) {
     return null;
   }
 

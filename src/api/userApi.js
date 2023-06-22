@@ -16,11 +16,18 @@ export const userApi = createApi({
       query: () => { return {
         url: 'userinfo'
       }}
+    }),
+    logout: builder.mutation({
+      query: () => { return {
+        method: 'POST',
+        url: 'logout'
+      }}
     })
   }}
 })
 
 export const {
   useSigninQuery,
-  useFindUserInfoQuery
+  useFindUserInfoQuery,
+  useLogoutMutation
 } = userApi;

@@ -8,6 +8,7 @@ import { useFindGoalsQuery } from "../api/goalApi";
 import { useFindUserInfoQuery } from "../api/userApi";
 
 import Goal from "./Goal";
+import CreateGoal from "./CreateGoal";
 
 export default function Goals() {
 
@@ -21,52 +22,21 @@ export default function Goals() {
    */
   const {
     data: goals,
-    isError: fetchGoalsError
+    refetch: refetchGoals,
+    isError
   } = useFindGoalsQuery();
 
-  const {
-    data: userinfo,
-    isError: fetchUserinfoError
-  } = useFindUserInfoQuery();
 
-  if (fetchUserinfoError || fetchGoalsError) {
+  if (isError) {
     window.location.replace('http://localhost:8080/signin');
     return null;
   }
 
-  const mockgoals = [
-    {
-      "id": 1,
-      "name": "my goal",
-      "description": "a description of my goal",
-      "imagePath": "/images/goal.png",
-      "targetAmount": "1000.00",
-      "currentAmount": "100.00",
-      "targetDate": "2023-12-25"
-    },
-    {
-      "id": 2,
-      "name": "my 2nd goal",
-      "description": "another description of my goal",
-      "imagePath": "/images/goal2.png",
-      "targetAmount": "123.45",
-      "currentAmount": "50.00",
-      "targetDate": "2023-12-31"
-    }
-  ]
 
   return (
     <Stack spacing={2} sx={{maxWidth: 480}}>
-      <Typography>
-        {userinfo?.name}
-      </Typography>
-      <Typography>
-        {userinfo?.email}
-      </Typography>
-      <Typography>
-        {userinfo?.sub}
-      </Typography>
-      <img src={userinfo?.picture} width='100px' />
+      <CreateGoal refetchGoals={refetchGoals} />
+
       {goals?.map((goal) => (
         <Goal key={goal?.id} goal={goal} />
       ))}

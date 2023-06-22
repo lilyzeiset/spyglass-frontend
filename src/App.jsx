@@ -36,13 +36,21 @@ function App() {
         <TitleBar />
         <Box
           component="main"
-          sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+          sx={{ 
+            flexGrow: 1, 
+            bgcolor: 'background.default', 
+            p: 3,
+            justifyContent: 'center',
+            justifyItems: 'center',
+            alignContent: 'center',
+            alignItems: 'center'
+          }}
         >
           <Toolbar /> {/* preserves space taken up by titlebar */}
           <Routes>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
-            <Route path='/goals' element={<Goals />} />
+            <Route path='/' element={<Goals />} />
           </Routes>
         </Box>
       </Box>

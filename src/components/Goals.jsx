@@ -38,7 +38,7 @@ export default function Goals() {
       <CreateGoal refetchGoals={refetchGoals} />
 
       {goals?.map((goal) => (
-        <Goal key={goal?.id} goal={goal} />
+        <Goal key={goal?.id} goal={goal} refetchGoals={refetchGoals} />
       ))}
     </Stack>
   )

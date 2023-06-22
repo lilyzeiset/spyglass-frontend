@@ -22,7 +22,17 @@ i18n.use(initReactI18next).init({
         "goal-name": "Name",
         "goal-description": "Description",
         "goal-target-amount": "Target amount",
-        "goal-target-date": "Target date"
+        "goal-target-date": "Target date",
+
+        "frequency": "Frequency",
+        "day": "day",
+        "week": "week",
+        "month": "month",
+
+        "deposit": "Deposit",
+        "every": "every",
+        "reach-goal-by": "to reach your goal by",
+        "make-deposit": "Make a deposit"
 
       }
     },

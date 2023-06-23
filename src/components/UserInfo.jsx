@@ -1,15 +1,25 @@
 import {
   Avatar,
   IconButton,
+  ListItem,
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
   Menu,
   MenuItem,
   Stack,
-  Typography
+  Typography,
+  Collapse,
+  List,
+  Divider
 } from '@mui/material';
-import { Logout } from '@mui/icons-material';
+import { 
+  Logout,
+  Translate,
+  ExpandMore,
+  ExpandLess
+} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,6 +38,7 @@ export default function UserInfo() {
    * States
    */
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [i18nMenuOpen, setI18nMenuOpen] = useState(false);
 
   /**
    * API Calls
@@ -39,20 +50,6 @@ export default function UserInfo() {
   } = useFindUserInfoQuery();
 
   const [logout] = useLogoutMutation();
-
-  /**
-   * Handles displaying menu
-   */
-  function handleShowMenu(event) {
-    setMenuAnchor(event?.currentTarget);
-  }
-
-  /**
-   * Handles closing menu
-   */
-  function handleCloseMenu() {
-    setMenuAnchor(null);
-  };
 
   /**
    * Handles logging out
@@ -67,6 +64,13 @@ export default function UserInfo() {
   }
 
   /**
+   * Handles changing language
+   */
+  function changeLanguage(lang) {
+    i18n.changeLanguage(lang);
+  }
+
+  /**
    * Display nothing if not logged in
    */
   if (isError || isFetching) {
@@ -78,41 +82,56 @@ export default function UserInfo() {
    */
   return (
     <>
-      <IconButton onClick={handleShowMenu}>
+      <IconButton onClick={event => setMenuAnchor(event.currentTarget)}>
         <Avatar alt={userinfo?.name} src={userinfo?.picture} />
       </IconButton>
+
       <Menu
         anchorEl={menuAnchor}
         open={Boolean(menuAnchor)}
-        onClose={handleCloseMenu}
+        onClose={() => setMenuAnchor(null)}
       >
-        <MenuItem divider>
-{/*
-          <Stack direction='row' spacing={2}>
-            <Avatar alt={userinfo?.name} src={userinfo?.picture} sx={{width: '3em', height: '3em'}}/>
-            <Stack>
-              <Typography sx={{fontWeight: 'bold'}}>
-                {userinfo?.name}
-              </Typography>
-              <Typography>
-                {userinfo?.email}
-              </Typography>
-            </Stack>
-          </Stack>
-*/}
-          <ListItemAvatar >
-            <Avatar alt={userinfo?.name} src={userinfo?.picture} />
-          </ListItemAvatar>
-          <ListItemText primary={userinfo?.name} secondary={userinfo?.email} />
-        </MenuItem>
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <Logout />
-          </ListItemIcon>
-          <ListItemText>
-            {t('logout')}
-          </ListItemText>
-        </MenuItem>
+        <List disablePadding>
+          <ListItem>
+            <ListItemAvatar >
+              <Avatar alt={userinfo?.name} src={userinfo?.picture} />
+            </ListItemAvatar>
+            <ListItemText primary={userinfo?.name} secondary={userinfo?.email} />
+          </ListItem>
+
+          <Divider />
+
+          <ListItemButton onClick={() => setI18nMenuOpen(!i18nMenuOpen)}>
+            <ListItemIcon sx={{pl: '0.5em'}}>
+              <Translate />
+            </ListItemIcon>
+            <ListItemText primary={t('language')} />
+            {i18nMenuOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        
+          <Collapse in={i18nMenuOpen} timeout="auto" unmountOnExit>
+            <List disablePadding>
+              <ListItemButton onClick={() => changeLanguage('en')}>
+                <ListItemText inset primary="English" />
+              </ListItemButton>
+              <ListItemButton onClick={() => changeLanguage('de')}>
+                <ListItemText inset primary="Deutsch" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+
+          <Divider />
+
+          <ListItemButton onClick={handleLogout}>
+            <ListItemIcon sx={{pl: '0.5em'}}>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText>
+              {t('logout')}
+            </ListItemText>
+          </ListItemButton>
+
+        </List>
       </Menu>
 
     </>

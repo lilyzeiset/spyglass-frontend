@@ -55,16 +55,18 @@ export default function Goal({goal, refetchGoals}) {
    * Handles submitting a deposit
    */
   function handleMakeDeposit() {
-    setIsDeposit(false);
-    const newCurrentAmount = Number(goal.currentAmount) + Number(inputDepositAmount)
-    updateGoal({
-      ...goal,
-      currentAmount: newCurrentAmount
-    })
-    .unwrap()
-    .then(() => {
-      refetchGoals();
-    });
+    if (Number(inputDepositAmount) > 0) {
+      setIsDeposit(false);
+      const newCurrentAmount = Number(goal.currentAmount) + Number(inputDepositAmount)
+      updateGoal({
+        ...goal,
+        currentAmount: newCurrentAmount
+      })
+      .unwrap()
+      .then(() => {
+        refetchGoals();
+      });
+    }
   }
 
   /**
@@ -214,7 +216,7 @@ export default function Goal({goal, refetchGoals}) {
               </Typography>
             )}
             <Typography>
-              ${goal.currentAmount} / ${goal.targetAmount}
+              ${goal.currentAmount.toFixed(2)} / ${goal.targetAmount.toFixed(2)}
             </Typography>
 
             <Typography component='div'>
@@ -246,7 +248,6 @@ export default function Goal({goal, refetchGoals}) {
                   <ClearIcon />
                 </Button>
                 <TextField
-                  // label={t('deposit-amount')}
                   variant='standard'
                   type='number'
                   InputProps={{

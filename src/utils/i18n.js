@@ -14,7 +14,9 @@ i18n.use(initReactI18next).init({
         "password": "Password",
         "confirm-password": "Confirm password",
         "login": "Login",
+        "logout": "Logout",
         "register": "Register",
+        "language": "Language",
 
         "cancel": "Cancel",
         "create-new-goal": "Create new goal",
@@ -40,7 +42,7 @@ i18n.use(initReactI18next).init({
     },
     de: {
       translation: {
-        "spyglass": "Spyglass"
+        "spyglass": "de Spyglass"
       }
     }
   },

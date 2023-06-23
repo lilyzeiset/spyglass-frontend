@@ -32,7 +32,9 @@ i18n.use(initReactI18next).init({
         "deposit": "Deposit",
         "every": "every",
         "reach-goal-by": "to reach your goal by",
-        "make-deposit": "Make a deposit"
+        "make-deposit": "Make a deposit",
+
+        "deposit-amount": "Deposit amount"
 
       }
     },

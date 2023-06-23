@@ -3,6 +3,7 @@ import {
   Typography
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { useFindGoalsQuery } from "../api/goalApi";
 import { useFindUserInfoQuery } from "../api/userApi";
@@ -16,6 +17,7 @@ export default function Goals() {
    * Utils
    */
   const {t} = useTranslation();
+  const navigate = useNavigate();
 
   /**
    * API Calls
@@ -28,7 +30,7 @@ export default function Goals() {
 
 
   if (isError) {
-    window.location.replace('http://localhost:8080/signin');
+    navigate('/');
     return null;
   }
 

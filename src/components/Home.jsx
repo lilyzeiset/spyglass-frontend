@@ -5,7 +5,7 @@ import {
 
 export default function Home() {
   return (
-    <Button onClick={() => {window.location.replace('http://localhost:8080/signin')}}>
+    <Button onClick={() => {window.location.replace(`${import.meta.env.VITE_API_URI}/signin`)}}>
       Log in with Google
     </Button>
   )

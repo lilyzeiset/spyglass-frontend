@@ -13,6 +13,8 @@ import {
   InputAdornment
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import SavingsIcon from '@mui/icons-material/Savings';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -31,7 +33,7 @@ export default function Goal({goal, refetchGoals}) {
    * States
    */
   const [frequency, setFrequency] = useState('day');
-  const [depositAmount, setDepositAmount] = useState(0);
+  const [suggestedDepositAmount, setSuggestedDepositAmount] = useState(0);
 
   const [isEdit, setIsEdit] = useState(false);
   const [inputGoalName, setInputGoalName] = useState(goal?.name);
@@ -39,14 +41,34 @@ export default function Goal({goal, refetchGoals}) {
   const [inputTargetAmount, setInputTargetAmount] = useState(goal?.targetAmount);
   const [inputTargetDate, setInputTargetDate] = useState(goal?.targetDate);
 
+  const [isDeposit, setIsDeposit] = useState(false);
+  const [inputDepositAmount, setInputDepositAmount] = useState(suggestedDepositAmount);
+
   /**
    * API Calls
    */
   const [updateGoal] = useUpdateGoalMutation();
   const [deleteGoal] = useDeleteGoalMutation();
 
+  
   /**
-   * Functions for handling editing
+   * Handles submitting a deposit
+   */
+  function handleMakeDeposit() {
+    setIsDeposit(false);
+    const newCurrentAmount = Number(goal.currentAmount) + Number(inputDepositAmount)
+    updateGoal({
+      ...goal,
+      currentAmount: newCurrentAmount
+    })
+    .unwrap()
+    .then(() => {
+      refetchGoals();
+    });
+  }
+
+  /**
+   * Handles submitting an edit
    */
   function handleSubmitEdit() {
     setIsEdit(false);
@@ -63,6 +85,9 @@ export default function Goal({goal, refetchGoals}) {
     });
   }
 
+  /**
+   * Handles cancelling an edit
+   */
   function handleCancelEdit() {
     setInputGoalName(goal?.name);
     setInputGoalDescription(goal?.description);
@@ -71,16 +96,17 @@ export default function Goal({goal, refetchGoals}) {
     setIsEdit(false);
   }
 
-  function handleDelete() {
-
-  }
-
   /**
-   * Calculate suggested deposit amount on component load
+   * Handles deleting a goal
    */
-  useEffect(() => {
-    handleChangeFrequency(frequency);
-  }, [])
+  function handleDelete() {
+    setIsEdit(false);
+    deleteGoal(goal?.id)
+    .unwrap()
+    .then(() => {
+      refetchGoals();
+    })
+  }
 
   /**
    * Handles calculating suggested deposit amount
@@ -91,16 +117,23 @@ export default function Goal({goal, refetchGoals}) {
     const days = Math.round((new Date(goal?.targetDate) - new Date())/(24*60*60*1000));
     switch(freq) {
       case 'day':
-        setDepositAmount((goal?.targetAmount / days).toFixed(2));
+        setSuggestedDepositAmount((goal?.targetAmount / days).toFixed(2));
         break;
       case 'week':
-        setDepositAmount((goal?.targetAmount / days / 7).toFixed(2));
+        setSuggestedDepositAmount((goal?.targetAmount / days / 7).toFixed(2));
         break;
       case 'month':
-        setDepositAmount((goal?.targetAmount / days / 30).toFixed(2));
+        setSuggestedDepositAmount((goal?.targetAmount / days / 30).toFixed(2));
         break;
     }
   }
+
+  /**
+   * Calculate suggested deposit amount on component load
+   */
+  useEffect(() => {
+    handleChangeFrequency(frequency);
+  }, [])
 
   return (
     <Card raised={true}>
@@ -115,8 +148,7 @@ export default function Goal({goal, refetchGoals}) {
           <img src={'../vite.svg'} />
         </Box>
 
-        {/* Info (editing) */}
-        {isEdit ? (
+        {isEdit ? ( //Info (editing)
           <Stack spacing={2}>
             <TextField
               label={t('goal-name')}
@@ -146,15 +178,18 @@ export default function Goal({goal, refetchGoals}) {
               value={inputTargetDate}
               onChange={e => setInputTargetDate(e.target.value)}
             />
+
+            {/* Button row (editing) */}
             <Stack spacing={2} direction={'row'}>
               <Button
                 variant='contained'
                 onClick={handleSubmitEdit}
+                sx={{flexGrow: 1}}
               >
                 {t('submit')}
               </Button>
               <Button
-                variant='contained'
+                variant='outlined'
                 onClick={handleCancelEdit}
               >
                 {t('cancel')}
@@ -173,15 +208,17 @@ export default function Goal({goal, refetchGoals}) {
             <Typography variant='h6' sx={{fontWeight: 'bold'}}>
               {goal.name}
             </Typography>
-            <Typography>
-              {goal.description}
-            </Typography>
+            {goal?.description && ( //Don't show description line if there is none
+              <Typography>
+                {goal.description}
+              </Typography>
+            )}
             <Typography>
               ${goal.currentAmount} / ${goal.targetAmount}
             </Typography>
 
-            <Typography>
-              {t('deposit')} ${depositAmount} {t('every')}&nbsp;
+            <Typography component='div'>
+              {t('deposit')} ${suggestedDepositAmount} {t('every')}&nbsp;
               <Select required
                 variant="standard"
                 id='frequency-select'
@@ -203,15 +240,45 @@ export default function Goal({goal, refetchGoals}) {
               {new Date(goal.targetDate).toLocaleDateString()}.
             </Typography>
 
-            <Stack spacing={2} direction={'row'}>
-              <Button variant='outlined' sx={{flexGrow: 1}}>
-                {t('make-deposit')}
-              </Button>
-              <Button variant='outlined' onClick={() => setIsEdit(true)}>
-                <EditIcon />
-              </Button>
+            {isDeposit ? ( //Button row (making deposit)
+              <Stack spacing={2} direction={'row'}>
+                <Button variant='outlined' onClick={() => setIsDeposit(false)}>
+                  <ClearIcon />
+                </Button>
+                <TextField
+                  // label={t('deposit-amount')}
+                  variant='standard'
+                  type='number'
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  value={inputDepositAmount}
+                  onChange={e => setInputDepositAmount(e.target.value)}
+                  sx={{flexGrow: 1}}
+                />
+                <Button variant='contained' onClick={handleMakeDeposit}>
+                  <SavingsIcon />
+                </Button>
+              </Stack>
+            ) : ( //Button row (not making deposit)
+              <Stack spacing={2} direction={'row'}>
+                <Button 
+                  variant='contained' 
+                  onClick={() => {
+                    setInputDepositAmount(suggestedDepositAmount);
+                    setIsDeposit(true);
+                  }} 
+                  sx={{flexGrow: 1}}
+                >
+                  {t('make-deposit')}
+                </Button>
+                <Button variant='outlined' onClick={() => setIsEdit(true)}>
+                  <EditIcon />
+                </Button>
+              </Stack>
+            )}
             </Stack>
-          </Stack>
+            
         )}
 
         {/* Progress Gauge */}

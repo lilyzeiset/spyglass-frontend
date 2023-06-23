@@ -21,7 +21,7 @@ export default function TitleBar () {
     <AppBar position="fixed">
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Typography variant="h6" noWrap component="div">
-          {t('spyglass')}
+          {t('spyglass')} {import.meta.env.VITE_APP_TITLE_SUFFIX}
         </Typography>
         <UserInfo />
       </Toolbar>

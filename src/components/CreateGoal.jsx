@@ -4,6 +4,8 @@ import {
   TextField,
   InputAdornment
 } from '@mui/material';
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,7 +25,7 @@ export default function CreateGoal({refetchGoals}) {
   const [inputGoalName, setInputGoalName] = useState('');
   const [inputGoalDescription, setInputGoalDescription] = useState('');
   const [inputTargetAmount, setInputTargetAmount] = useState(0);
-  const [inputTargetDate, setInputTargetDate] = useState('2024-01-01');
+  const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date()));
   
   /**
    * API Call
@@ -86,31 +88,35 @@ export default function CreateGoal({refetchGoals}) {
         value={inputGoalDescription}
         onChange={e => setInputGoalDescription(e.target.value)}
       />
-      <TextField
-        label={t('goal-target-amount')}
-        variant='outlined'
-        type='number'
-        InputProps={{
-          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-        }}
-        value={inputTargetAmount}
-        onChange={e => setInputTargetAmount(e.target.value)}
-      />
-      <TextField
-        label={t('goal-target-date')}
-        variant='outlined'
-        value={inputTargetDate}
-        onChange={e => setInputTargetDate(e.target.value)}
-      />
+      <Stack spacing={2} direction='row'>
+        <TextField
+          label={t('goal-target-amount')}
+          variant='outlined'
+          type='number'
+          sx={{flexGrow: 1}}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          }}
+          value={inputTargetAmount}
+          onChange={e => setInputTargetAmount(e.target.value)}
+        />
+        <DatePicker
+          label={t('goal-target-date')}
+          variant='outlined'
+          value={inputTargetDate}
+          onChange={date => setInputTargetDate(date)}
+        />
+      </Stack>
       <Stack spacing={2} direction={'row'}>
         <Button
           variant='contained'
+          sx={{flexGrow: 1}}
           onClick={handleSubmitCreate}
         >
           {t('create-goal')}
         </Button>
         <Button
-          variant='contained'
+          variant='outlined'
           onClick={handleCancelCreate}
         >
           {t('cancel')}

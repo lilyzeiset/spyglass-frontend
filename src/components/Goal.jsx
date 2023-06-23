@@ -12,6 +12,8 @@ import {
   InputLabel,
   InputAdornment
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import EditIcon from '@mui/icons-material/Edit';
 import SavingsIcon from '@mui/icons-material/Savings';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -39,7 +41,7 @@ export default function Goal({goal, refetchGoals}) {
   const [inputGoalName, setInputGoalName] = useState(goal?.name);
   const [inputGoalDescription, setInputGoalDescription] = useState(goal?.description);
   const [inputTargetAmount, setInputTargetAmount] = useState(goal?.targetAmount);
-  const [inputTargetDate, setInputTargetDate] = useState(goal?.targetDate);
+  const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date(goal?.targetDate)));
 
   const [isDeposit, setIsDeposit] = useState(false);
   const [inputDepositAmount, setInputDepositAmount] = useState(suggestedDepositAmount);
@@ -84,6 +86,7 @@ export default function Goal({goal, refetchGoals}) {
     .unwrap()
     .then(() => {
       refetchGoals();
+      //update values on frontend rather than refetch
     });
   }
 
@@ -94,7 +97,7 @@ export default function Goal({goal, refetchGoals}) {
     setInputGoalName(goal?.name);
     setInputGoalDescription(goal?.description);
     setInputTargetAmount(goal?.targetAmount);
-    setInputTargetDate(goal?.targetDate);
+    setInputTargetDate(dayjs(new Date(goal?.targetDate)));
     setIsEdit(false);
   }
 
@@ -174,11 +177,11 @@ export default function Goal({goal, refetchGoals}) {
               value={inputTargetAmount}
               onChange={e => setInputTargetAmount(e.target.value)}
             />
-            <TextField
+            <DatePicker
               label={t('goal-target-date')}
               variant='standard'
               value={inputTargetDate}
-              onChange={e => setInputTargetDate(e.target.value)}
+              onChange={date => setInputTargetDate(date)}
             />
 
             {/* Button row (editing) */}

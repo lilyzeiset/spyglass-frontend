@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { useCreateGoalMutation } from '../api/goalApi';
+import { useCreateGoalMutation, useUploadImageMutation } from '../api/goalApi';
 import { ArrowBack } from '@mui/icons-material';
 
 export default function CreateGoal() {
@@ -30,11 +30,14 @@ export default function CreateGoal() {
   const [inputGoalDescription, setInputGoalDescription] = useState('');
   const [inputTargetAmount, setInputTargetAmount] = useState(0);
   const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date()));
+
+  const [imageFormData, setImageFormData] = useState();
   
   /**
-   * API Call
+   * API Calls
    */
   const [createGoal] = useCreateGoalMutation();
+  const [uploadImage] = useUploadImageMutation();
 
   /**
    * Handles creating a goal
@@ -47,9 +50,42 @@ export default function CreateGoal() {
       targetDate: inputTargetDate
     })
     .unwrap()
-    .then(() => {
-      navigate('/goals');
+    .then((goal) => {
+      console.log('**from submit');
+      console.log(imageFormData);
+      uploadImage({id: goal.id, image: imageFormData})
+      .unwrap()
+      .then(() => {
+        navigate('/goals');
+      })
     });
+  }
+
+  /**
+   * Handles uploading a file
+   */
+  function handleFileChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const reader = new FileReader();
+      let fileByteArray = [];
+      reader.readAsArrayBuffer(file);
+      reader.onloadend = (evt) => {
+        if (evt.target.readyState == FileReader.DONE) {
+          var arrayBuffer = evt.target.result,
+            array = new Uint8Array(arrayBuffer);
+          for (var i = 0; i < array.length; i++) {
+            fileByteArray.push(array[i]);
+          }
+        }
+      }
+      console.log(fileByteArray);
+
+      setImageFormData(file);
+    }
   }
 
   /**
@@ -100,6 +136,20 @@ export default function CreateGoal() {
               onChange={date => setInputTargetDate(date)}
             />
           </Stack>
+
+          <Button
+            variant="outlined"
+            component="label"
+          >
+            {t('upload-image')}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              hidden
+            />
+          </Button>
+
           <Button
             variant='contained'
             color='secondary'

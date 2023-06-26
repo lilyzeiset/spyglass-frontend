@@ -19,6 +19,28 @@ export const goalApi = createApi({
         findGoalById: builder.query({
             query: (id) => `/${id}`
         }),
+        uploadImage: builder.mutation({
+            query: ( {id, image} ) => {
+                console.log('**from query');
+                console.log(image);
+                const formData = new FormData();
+                formData.append('image', image, image.name);
+        
+                return {
+                  url: `/${id}/upload`,
+                  method: 'POST',
+                  body: formData,
+                };
+            }
+            // query: (id, imageData) => ({
+            //     url: `/${id}/upload`,
+            //     method: 'POST',
+            //     body: imageData,
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // })
+        }),
         createGoal: builder.mutation({
             query: (goal) => { return {
                 method: 'POST',
@@ -46,6 +68,7 @@ export const {
   useFindActiveGoalsQuery,
   useFindInactiveGoalsQuery,
   useFindGoalByIdQuery,
+  useUploadImageMutation,
   useCreateGoalMutation,
   useUpdateGoalMutation,
   useDeleteGoalMutation

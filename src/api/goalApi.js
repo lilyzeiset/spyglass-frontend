@@ -10,6 +10,15 @@ export const goalApi = createApi({
         findGoals: builder.query({
             query: () => ''
         }),
+        findActiveGoals: builder.query({
+            query: () => '/active'
+        }),
+        findInactiveGoals: builder.query({
+            query: () => '/inactive'
+        }),
+        findGoalById: builder.query({
+            query: (id) => `/${id}`
+        }),
         createGoal: builder.mutation({
             query: (goal) => { return {
                 method: 'POST',
@@ -34,6 +43,9 @@ export const goalApi = createApi({
 
 export const {
   useFindGoalsQuery,
+  useFindActiveGoalsQuery,
+  useFindInactiveGoalsQuery,
+  useFindGoalByIdQuery,
   useCreateGoalMutation,
   useUpdateGoalMutation,
   useDeleteGoalMutation

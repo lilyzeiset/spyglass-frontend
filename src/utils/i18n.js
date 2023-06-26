@@ -9,15 +9,11 @@ i18n.use(initReactI18next).init({
       translation: {
         "spyglass": "Spyglass",
 
-        "name": "Name",
-        "email": "Email",
-        "password": "Password",
-        "confirm-password": "Confirm password",
-        "login": "Login",
+        "login-google": "Log in with Google",
         "logout": "Logout",
-        "register": "Register",
         "language": "Language",
 
+        "back": "Back",
         "cancel": "Cancel",
         "create-new-goal": "Create new goal",
         "create-goal": "Create Goal",
@@ -25,6 +21,7 @@ i18n.use(initReactI18next).init({
         "goal-description": "Description",
         "goal-target-amount": "Target amount",
         "goal-target-date": "Target date",
+        "due-date": "Due date",
 
         "frequency": "Frequency",
         "day": "day",

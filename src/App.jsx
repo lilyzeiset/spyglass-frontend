@@ -12,7 +12,11 @@ import i18n from "./utils/i18n";
 
 import TitleBar from './components/TitleBar';
 import Home from './components/Home';
-import Goals from './components/Goals';
+import ActiveGoals from './components/ActiveGoals';
+import ViewGoal from './components/ViewGoal';
+import CompletedGoals from './components/CompletedGoals'
+import CreateGoal from './components/CreateGoal';
+import ViewCompletedGoal from './components/ViewCompletedGoal';
 
 function App() {
 
@@ -22,7 +26,13 @@ function App() {
   const mdTheme = createTheme({
     palette: {
       primary: {
-        main: '#76c076'
+        main: '#90141f'
+      },
+      secondary: {
+        main: '#228d99'
+      },
+      background: {
+        default: '#ededf2'
       }
     }
   });
@@ -34,26 +44,27 @@ function App() {
     <I18nextProvider i18n={i18n}>
     <BrowserRouter>
       <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
-        <TitleBar />
-        <Box
-          component="main"
-          sx={{ 
-            flexGrow: 1, 
-            bgcolor: 'background.default', 
-            p: 3,
-            justifyContent: 'center',
-            justifyItems: 'center',
-            alignContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <Toolbar /> {/* preserves space taken up by titlebar */}
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/goals' element={<Goals />} />
-          </Routes>
-        </Box>
+      <TitleBar />
+      <Box
+        component="main"
+        sx={{ 
+          display: 'flex',
+          flexGrow: 1, 
+          bgcolor: 'background.default', 
+          p: 3,
+          pt: 12,
+          justifyContent: 'center'
+        }}
+      >
+        {/* <Toolbar /> */}
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/goals' element={<ActiveGoals />} />
+          <Route path='/goals/completed' element={<CompletedGoals />} />
+          <Route path='/goal/create' element={<CreateGoal />} />
+          <Route path='/goal/:id' element={<ViewGoal />} />
+          <Route path='/goal/completed/:id' element={<ViewCompletedGoal />} />
+        </Routes>
       </Box>
     </BrowserRouter>
     </I18nextProvider>

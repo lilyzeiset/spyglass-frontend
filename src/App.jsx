@@ -31,6 +31,9 @@ function App() {
       secondary: {
         main: '#228d99'
       },
+      info: {
+        main: '#8e589c'
+      },
       background: {
         default: '#ededf2'
       }

@@ -48,7 +48,7 @@ export default function Goals() {
   }
 
   return (
-    <Box>
+    <Box sx={{flexGrow: 1, maxWidth: '1000px'}}>
       <Box padding={2}>
         <Button 
           variant='contained' 
@@ -59,7 +59,7 @@ export default function Goals() {
         </Button>
       </Box>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} align='center'>
         {goals?.map((goal) => (
           <Grid item key={goal?.id} xs={12} sm={12} md={6} sx={{width: '16em', height: '12em'}}>
             <Link to={`/goal/${goal.id}`} style={{ textDecoration: 'none' }}>

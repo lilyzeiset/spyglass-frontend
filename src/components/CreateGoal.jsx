@@ -107,6 +107,7 @@ export default function CreateGoal() {
             <DatePicker
               label={t('goal-target-date')}
               variant='outlined'
+              disablePast
               value={inputTargetDate}
               onChange={date => setInputTargetDate(date)}
             />

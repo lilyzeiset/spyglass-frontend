@@ -19,6 +19,8 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowBack } from "@mui/icons-material";
 
 import { 
   useFindGoalByIdQuery,
@@ -26,8 +28,8 @@ import {
   useDeleteGoalMutation, 
   useUploadImageMutation
 } from "../api/goalApi";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowBack } from "@mui/icons-material";
+
+import GoalChart from "./GoalChart";
 
 export default function ViewGoal() {
 
@@ -45,7 +47,9 @@ export default function ViewGoal() {
    */
   const {
     data: goal,
-    refetch: refetchGoal
+    refetch: refetchGoal,
+    isLoading,
+    isFetching
   } = useFindGoalByIdQuery(location.pathname.split('/').pop());
   const [updateGoal] = useUpdateGoalMutation();
   const [deleteGoal] = useDeleteGoalMutation();
@@ -68,7 +72,7 @@ export default function ViewGoal() {
   const [isDeposit, setIsDeposit] = useState(false);
   const [inputDepositAmount, setInputDepositAmount] = useState(suggestedDepositAmount);
 
-
+  const [completedMessage, setCompletedMessage] = useState('');
   
   /**
    * Handles submitting a deposit
@@ -76,13 +80,23 @@ export default function ViewGoal() {
   function handleMakeDeposit() {
     if (Number(inputDepositAmount) > 0) {
       setIsDeposit(false);
+      let goalCompleted = false;
       const newCurrentAmount = Number(goal.currentAmount) + Number(inputDepositAmount)
+      if(newCurrentAmount >= Number(goal.targetAmount)) {
+        goalCompleted = true;
+        setCompletedMessage(t('goal-completed'));
+      }
       updateGoal({
         ...goal,
         currentAmount: newCurrentAmount
       })
       .unwrap()
       .then(() => {
+        if (goalCompleted) {
+          setTimeout(() => {
+            navigate('/goals/completed');
+          }, 1000);
+        }
         refetchGoal();
       });
     }
@@ -164,10 +178,10 @@ export default function ViewGoal() {
         setSuggestedDepositAmount((goal?.targetAmount / days).toFixed(2));
         break;
       case 'week':
-        setSuggestedDepositAmount((goal?.targetAmount / days / 7).toFixed(2));
+        setSuggestedDepositAmount((goal?.targetAmount / Math.ceil(days / 7)).toFixed(2));
         break;
       case 'month':
-        setSuggestedDepositAmount((goal?.targetAmount / days / 30).toFixed(2));
+        setSuggestedDepositAmount((goal?.targetAmount / Math.ceil(days / 30)).toFixed(2));
         break;
     }
   }
@@ -180,8 +194,8 @@ export default function ViewGoal() {
   }, [goal])
 
   return (
-    <Box>
-      <Box padding={2}>
+    <Stack spacing={2}>
+      <Stack padding={2} spacing={2} direction='row'>
         <Button 
           variant='contained' 
           startIcon={<ArrowBack />}
@@ -189,7 +203,10 @@ export default function ViewGoal() {
         >
           {t('back')}
         </Button>
-      </Box>
+        <Typography variant='h6'>
+          {completedMessage}
+        </Typography>
+      </Stack>
 
       <Card raised={true}>
         <Stack 
@@ -363,13 +380,10 @@ export default function ViewGoal() {
               
           )}
 
-          {/* Progress Gauge 
-          <Box>
-            <CircularProgress variant="determinate" value={progress} />
-          </Box>
-                  */}
         </Stack>
       </Card>
-    </Box>
+
+      {!isLoading && !isFetching && <GoalChart current={goal?.currentAmount} target={goal?.targetAmount} />}
+    </Stack>
   )
 }

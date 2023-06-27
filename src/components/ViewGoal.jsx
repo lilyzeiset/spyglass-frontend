@@ -23,12 +23,13 @@ import { useTranslation } from "react-i18next";
 import { 
   useFindGoalByIdQuery,
   useUpdateGoalMutation, 
-  useDeleteGoalMutation 
+  useDeleteGoalMutation, 
+  useUploadImageMutation
 } from "../api/goalApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
 
-export default function ViewGoal({goal1, refetchGoals1}) {
+export default function ViewGoal() {
 
   // const progress = goal.currentAmount / goal.targetAmount * 100;
 
@@ -48,6 +49,7 @@ export default function ViewGoal({goal1, refetchGoals1}) {
   } = useFindGoalByIdQuery(location.pathname.split('/').pop());
   const [updateGoal] = useUpdateGoalMutation();
   const [deleteGoal] = useDeleteGoalMutation();
+  const [uploadImage] = useUploadImageMutation();
 
   /**
    * States
@@ -60,6 +62,8 @@ export default function ViewGoal({goal1, refetchGoals1}) {
   const [inputGoalDescription, setInputGoalDescription] = useState(goal?.description);
   const [inputTargetAmount, setInputTargetAmount] = useState(goal?.targetAmount);
   const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date(goal?.targetDate)));
+
+  const [imageData, setImageData] = useState();
 
   const [isDeposit, setIsDeposit] = useState(false);
   const [inputDepositAmount, setInputDepositAmount] = useState(suggestedDepositAmount);
@@ -98,13 +102,19 @@ export default function ViewGoal({goal1, refetchGoals1}) {
     })
     .unwrap()
     .then(() => {
-      refetchGoal();
-      /*
-      goal.name = inputGoalName;
-      goal.description = inputGoalDescription;
-      goal.targetAmount = inputTargetAmount;
-      goal.targetDate = inputTargetDate;
-      */
+      if (imageData) {
+        uploadImage({id: goal.id, image: imageData})
+        .unwrap()
+        .then(() => {
+          refetchGoal();
+        })
+        .catch(e => {
+          console.log(e.message);
+          refetchGoal();
+        })
+      } else {
+        refetchGoal();
+      }
     });
   }
 
@@ -117,6 +127,17 @@ export default function ViewGoal({goal1, refetchGoals1}) {
     setInputTargetAmount(goal?.targetAmount);
     setInputTargetDate(dayjs(new Date(goal?.targetDate)));
     setIsEdit(false);
+  }
+
+  /**
+   * Handles showing the edit form
+   */
+  function handleShowEdit() {
+    setInputGoalName(goal?.name);
+    setInputGoalDescription(goal?.description);
+    setInputTargetAmount(goal?.targetAmount);
+    setInputTargetDate(dayjs(new Date(goal?.targetDate)));
+    setIsEdit(true);
   }
 
   /**
@@ -179,7 +200,10 @@ export default function ViewGoal({goal1, refetchGoals1}) {
         >
           {/* Image display */}
           <Box sx={{width: '12em'}}>
-            <img src={'../vite.svg'} width='100%' />
+            <img 
+              src={`${import.meta.env.VITE_IMAGE_BUCKET_URL}/${goal?.imagePath ?? 'default.jpg'}?${Date.now()}`} 
+              width='100%' 
+            />
           </Box>
 
           {isEdit ? ( //Info (editing)
@@ -217,6 +241,19 @@ export default function ViewGoal({goal1, refetchGoals1}) {
                 value={inputTargetDate}
                 onChange={date => setInputTargetDate(date)}
               />
+
+              <Button
+                variant="outlined"
+                component="label"
+              >
+                {t('upload-image')}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {setImageData(e.target.files[0])}}
+                  hidden
+                />
+              </Button>
 
               {/* Button row (editing) */}
               <Stack spacing={2} direction={'row'}>
@@ -282,6 +319,8 @@ export default function ViewGoal({goal1, refetchGoals1}) {
                 {new Date(goal?.targetDate).toLocaleDateString()}.
               </Typography>
 
+              <Box sx={{flexGrow: 1}} /> {/* Just to fill the space */}
+
               {isDeposit ? ( //Button row (making deposit)
                 <Stack spacing={2} direction={'row'}>
                   <Button variant='outlined' color='secondary' onClick={() => setIsDeposit(false)}>
@@ -315,7 +354,7 @@ export default function ViewGoal({goal1, refetchGoals1}) {
                   >
                     {t('make-deposit')}
                   </Button>
-                  <Button variant='outlined' color='secondary' onClick={() => setIsEdit(true)}>
+                  <Button variant='outlined' color='secondary' onClick={handleShowEdit}>
                     <EditIcon />
                   </Button>
                 </Stack>

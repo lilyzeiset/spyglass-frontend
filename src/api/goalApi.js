@@ -21,8 +21,6 @@ export const goalApi = createApi({
         }),
         uploadImage: builder.mutation({
             query: ( {id, image} ) => {
-                console.log('**from query');
-                console.log(image);
                 const formData = new FormData();
                 formData.append('image', image, image.name);
         
@@ -32,14 +30,6 @@ export const goalApi = createApi({
                   body: formData,
                 };
             }
-            // query: (id, imageData) => ({
-            //     url: `/${id}/upload`,
-            //     method: 'POST',
-            //     body: imageData,
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }
-            // })
         }),
         createGoal: builder.mutation({
             query: (goal) => { return {

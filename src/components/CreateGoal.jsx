@@ -31,7 +31,7 @@ export default function CreateGoal() {
   const [inputTargetAmount, setInputTargetAmount] = useState(0);
   const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date()));
 
-  const [imageFormData, setImageFormData] = useState();
+  const [imageData, setImageData] = useState();
   
   /**
    * API Calls
@@ -51,41 +51,16 @@ export default function CreateGoal() {
     })
     .unwrap()
     .then((goal) => {
-      console.log('**from submit');
-      console.log(imageFormData);
-      uploadImage({id: goal.id, image: imageFormData})
+      uploadImage({id: goal.id, image: imageData})
       .unwrap()
       .then(() => {
         navigate('/goals');
       })
+      .catch(e => {
+        console.log(e.message);
+        navigate('/goals');
+      })
     });
-  }
-
-  /**
-   * Handles uploading a file
-   */
-  function handleFileChange(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const reader = new FileReader();
-      let fileByteArray = [];
-      reader.readAsArrayBuffer(file);
-      reader.onloadend = (evt) => {
-        if (evt.target.readyState == FileReader.DONE) {
-          var arrayBuffer = evt.target.result,
-            array = new Uint8Array(arrayBuffer);
-          for (var i = 0; i < array.length; i++) {
-            fileByteArray.push(array[i]);
-          }
-        }
-      }
-      console.log(fileByteArray);
-
-      setImageFormData(file);
-    }
   }
 
   /**
@@ -145,7 +120,7 @@ export default function CreateGoal() {
             <input
               type="file"
               accept="image/*"
-              onChange={handleFileChange}
+              onChange={e => {setImageData(e.target.files[0])}}
               hidden
             />
           </Button>

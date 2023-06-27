@@ -68,7 +68,10 @@ export default function ViewCompletedGoal({goal1, refetchGoals1}) {
         >
           {/* Image display */}
           <Box sx={{width: '12em'}}>
-            <img src={'/vite.svg'} width='100%' />
+            <img 
+              src={`${import.meta.env.VITE_IMAGE_BUCKET_URL}/${goal?.imagePath ?? 'default.jpg'}?${Date.now()}`} 
+              width='100%' 
+            />
           </Box>
 
           

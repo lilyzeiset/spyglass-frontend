@@ -41,6 +41,12 @@ export default function CompletedGoals() {
 
   if (isLoading) {
     return null;
+  } else if (goals?.length == 0) {
+    return (
+      <Typography variant='h6'>
+        {t('no-completed-goals')}
+      </Typography>
+    )
   }
 
   return (

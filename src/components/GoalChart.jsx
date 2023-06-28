@@ -1,4 +1,4 @@
-import { Card, Typography } from "@mui/material";
+import { Card, Typography, Box } from "@mui/material";
 import Chart from 'chart.js/auto';
 import { useRef, useEffect } from "react";
 import { useTheme } from '@mui/material/styles'
@@ -40,8 +40,8 @@ export default function GoalChart({current, target}) {
   }, []);
 
   return (
-    <Card raised sx={{padding: 2}}>
+    <Box sx={{p:4}}>
       <canvas ref={chartRef} />
-    </Card>
+    </Box>
   )
 }

@@ -381,9 +381,10 @@ export default function ViewGoal() {
           )}
 
         </Stack>
-      </Card>
 
       {!isLoading && !isFetching && <GoalChart current={goal?.currentAmount} target={goal?.targetAmount} />}
+    
+      </Card>
     </Stack>
   )
 }

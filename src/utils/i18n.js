@@ -30,7 +30,8 @@ i18n.use(initReactI18next).init({
         "make-deposit": "Make a deposit",
         "upload-image": "Upload image",
         "deposit-amount": "Deposit amount",
-        "goal-completed": "Congratulations! You completed your goal!"
+        "goal-completed": "Congratulations! You completed your goal!",
+        "no-completed-goals": "You haven't completed any goals yet!"
       }
     },
     de: {
@@ -58,7 +59,8 @@ i18n.use(initReactI18next).init({
         "make-deposit": "Einzahlung tätigen",
         "upload-image": "Bild hochladen",
         "deposit-amount": "Einzahlungsbetrag",
-        "goal-completed": "Herzlichen Glückwunsch! Sie haben Ihr Ziel erreicht!"
+        "goal-completed": "Herzlichen Glückwunsch! Sie haben Ihr Ziel erreicht!",
+        "no-completed-goals": "Du hast bisher keine Ziele abgeschlossen!"
         }
     }
   },

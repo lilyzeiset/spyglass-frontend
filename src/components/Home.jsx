@@ -17,7 +17,8 @@ export default function Home() {
   const {
     data: userinfo,
     isError,
-    isLoading
+    isLoading,
+    error
   } = useFindUserInfoQuery();
 
   useEffect(() => {

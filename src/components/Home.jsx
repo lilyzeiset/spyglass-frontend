@@ -27,7 +27,7 @@ export default function Home() {
   }, [userinfo])
 
   return (
-    <Button onClick={() => {window.location.replace(`${import.meta.env.VITE_API_URI}/signin`)}}>
+    <Button onClick={() => {window.location.href(`${import.meta.env.VITE_API_URI}/signin`)}}>
       {t('login-google')}
     </Button>
     )

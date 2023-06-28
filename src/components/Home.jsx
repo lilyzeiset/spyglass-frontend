@@ -2,14 +2,33 @@ import {
   Button,
   Typography 
 } from "@mui/material";
+import { useFindUserInfoQuery } from "../api/userApi";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
 export default function Home() {
 
-  //get userinfo here, iferror, display login , else, redirect to goals
+  /**
+   * API Call / utils
+   */
+  const {t} = useTranslation();
+  const navigate = useNavigate();
+  const {
+    data: userinfo,
+    isError,
+    isLoading
+  } = useFindUserInfoQuery();
+
+  useEffect(() => {
+    if (!isLoading && !isError) {
+      navigate('/goals');
+    }
+  }, [userinfo])
 
   return (
     <Button onClick={() => {window.location.replace(`${import.meta.env.VITE_API_URI}/signin`)}}>
-      Log in with Google
+      {t('login-google')}
     </Button>
-  )
+    )
 }

@@ -8,16 +8,10 @@ i18n.use(initReactI18next).init({
     en: {
       translation: {
         "spyglass": "Spyglass",
-
-        "name": "Name",
-        "email": "Email",
-        "password": "Password",
-        "confirm-password": "Confirm password",
-        "login": "Login",
+        "login-google": "Log in with Google",
         "logout": "Logout",
-        "register": "Register",
         "language": "Language",
-
+        "back": "Back",
         "cancel": "Cancel",
         "create-new-goal": "Create new goal",
         "create-goal": "Create Goal",
@@ -25,25 +19,47 @@ i18n.use(initReactI18next).init({
         "goal-description": "Description",
         "goal-target-amount": "Target amount",
         "goal-target-date": "Target date",
-
+        "due-date": "Due date",
         "frequency": "Frequency",
         "day": "day",
         "week": "week",
         "month": "month",
-
         "deposit": "Deposit",
         "every": "every",
         "reach-goal-by": "to reach your goal by",
         "make-deposit": "Make a deposit",
-
-        "deposit-amount": "Deposit amount"
-
+        "upload-image": "Upload image",
+        "deposit-amount": "Deposit amount",
+        "goal-completed": "Congratulations! You completed your goal!"
       }
     },
     de: {
       translation: {
-        "spyglass": "de Spyglass"
-      }
+        "spyglass": "Spyglass",
+        "login-google": "Mit Google anmelden",
+        "logout": "Abmelden",
+        "language": "Sprache",
+        "back": "Zurück",
+        "cancel": "Abbrechen",
+        "create-new-goal": "Neues Ziel erstellen",
+        "create-goal": "Ziel erstellen",
+        "goal-name": "Name",
+        "goal-description": "Beschreibung",
+        "goal-target-amount": "Zielbetrag",
+        "goal-target-date": "Zieldatum",
+        "due-date": "Fälligkeitsdatum",
+        "frequency": "Häufigkeit",
+        "day": "Tag",
+        "week": "Woche",
+        "month": "Monat",
+        "deposit": "Einzahlung",
+        "every": "jeden",
+        "reach-goal-by": "um Ihr Ziel zu erreichen",
+        "make-deposit": "Einzahlung tätigen",
+        "upload-image": "Bild hochladen",
+        "deposit-amount": "Einzahlungsbetrag",
+        "goal-completed": "Herzlichen Glückwunsch! Sie haben Ihr Ziel erreicht!"
+        }
     }
   },
   fallbackLng: "en"

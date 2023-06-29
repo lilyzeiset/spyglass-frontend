@@ -17,7 +17,7 @@ export default function GoalChart({current, target}) {
       labels: ['Amount saved', 'Amount remaining'],
       datasets: [{
         data: [Number(current), Number(target) - Number(current)],
-        backgroundColor: [theme.palette.info.main, theme.palette.grey.A100],
+        backgroundColor: [theme.palette.info.main, '#ddd'],
       }],
     };
 

@@ -4,10 +4,13 @@ import {
   TextField,
   InputAdornment,
   Box,
-  Card
+  Card,
+  Typography
 } from '@mui/material';
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -29,9 +32,11 @@ export default function CreateGoal() {
   const [inputGoalName, setInputGoalName] = useState('');
   const [inputGoalDescription, setInputGoalDescription] = useState('');
   const [inputTargetAmount, setInputTargetAmount] = useState(0);
-  const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date()));
+  const [inputTargetDate, setInputTargetDate] = useState(dayjs.utc(new Date()));
 
   const [imageData, setImageData] = useState();
+
+  const [errorMsg, setErrorMsg] = useState('');
   
   /**
    * API Calls
@@ -43,24 +48,32 @@ export default function CreateGoal() {
    * Handles creating a goal
    */
   function handleSubmitCreate() {
+    const actualDate = inputTargetDate.add(12, 'hours').toDate(); //not ideal, dates are confusing
     createGoal({
       name: inputGoalName,
       description: inputGoalDescription,
       targetAmount: inputTargetAmount,
-      targetDate: inputTargetDate
+      targetDate: actualDate
     })
     .unwrap()
     .then((goal) => {
-      uploadImage({id: goal.id, image: imageData})
-      .unwrap()
-      .then(() => {
+      if (imageData) {
+        uploadImage({id: goal.id, image: imageData})
+        .unwrap()
+        .then(() => {
+          navigate('/goals');
+        })
+        .catch(e => {
+          console.log(e.message);
+          navigate('/goals');
+        })
+      } else {
         navigate('/goals');
-      })
-      .catch(e => {
-        console.log(e.message);
-        navigate('/goals');
-      })
-    });
+      }
+    })
+    .catch(() => {
+      setErrorMsg(t('required-fields'));
+    })
   }
 
   /**
@@ -125,6 +138,7 @@ export default function CreateGoal() {
               hidden
             />
           </Button>
+          {imageData?.name ?? ''}
 
           <Button
             variant='contained'
@@ -134,6 +148,9 @@ export default function CreateGoal() {
           >
             {t('create-goal')}
           </Button>
+          <Typography color='error'>
+            {errorMsg}
+          </Typography>
         </Stack>
       </Card>
     </Box>

@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 import EditIcon from '@mui/icons-material/Edit';
 import SavingsIcon from '@mui/icons-material/Savings';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -21,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
+import ConfettiExplosion from 'react-confetti-explosion';
 
 import { 
   useFindGoalByIdQuery,
@@ -65,7 +68,7 @@ export default function ViewGoal() {
   const [inputGoalName, setInputGoalName] = useState(goal?.name);
   const [inputGoalDescription, setInputGoalDescription] = useState(goal?.description);
   const [inputTargetAmount, setInputTargetAmount] = useState(goal?.targetAmount);
-  const [inputTargetDate, setInputTargetDate] = useState(dayjs(new Date(goal?.targetDate)));
+  const [inputTargetDate, setInputTargetDate] = useState(dayjs.utc(new Date(goal?.targetDate)));
 
   const [imageData, setImageData] = useState();
 
@@ -73,6 +76,7 @@ export default function ViewGoal() {
   const [inputDepositAmount, setInputDepositAmount] = useState(suggestedDepositAmount);
 
   const [completedMessage, setCompletedMessage] = useState('');
+  const [doExplosion, setDoExplosion] = useState(false);
   
   /**
    * Handles submitting a deposit
@@ -93,9 +97,10 @@ export default function ViewGoal() {
       .unwrap()
       .then(() => {
         if (goalCompleted) {
+          setDoExplosion(true);
           setTimeout(() => {
             navigate('/goals/completed');
-          }, 1000);
+          }, 3000);
         }
         refetchGoal();
       });
@@ -133,24 +138,14 @@ export default function ViewGoal() {
   }
 
   /**
-   * Handles cancelling an edit
-   */
-  function handleCancelEdit() {
-    setInputGoalName(goal?.name);
-    setInputGoalDescription(goal?.description);
-    setInputTargetAmount(goal?.targetAmount);
-    setInputTargetDate(dayjs(new Date(goal?.targetDate)));
-    setIsEdit(false);
-  }
-
-  /**
    * Handles showing the edit form
    */
   function handleShowEdit() {
     setInputGoalName(goal?.name);
     setInputGoalDescription(goal?.description);
     setInputTargetAmount(goal?.targetAmount);
-    setInputTargetDate(dayjs(new Date(goal?.targetDate)));
+    setInputTargetDate(dayjs.utc(new Date(goal?.targetDate)));
+    setImageData(null);
     setIsEdit(true);
   }
 
@@ -172,7 +167,7 @@ export default function ViewGoal() {
    */
   function handleChangeFrequency(freq) {
     setFrequency(freq);
-    const days = Math.round((new Date(goal?.targetDate) - new Date())/(24*60*60*1000));
+    const days = 1 + Math.round((new Date(goal?.targetDate) - new Date())/(24*60*60*1000));
     switch(freq) {
       case 'day':
         setSuggestedDepositAmount((goal?.targetAmount / days).toFixed(2));
@@ -194,7 +189,7 @@ export default function ViewGoal() {
   }, [goal])
 
   return (
-    <Stack spacing={2}>
+    <Stack>
       <Stack padding={2} spacing={2} direction='row'>
         <Button 
           variant='contained' 
@@ -206,9 +201,10 @@ export default function ViewGoal() {
         <Typography variant='h6'>
           {completedMessage}
         </Typography>
+        {doExplosion && <ConfettiExplosion />}
       </Stack>
 
-      <Card raised={true}>
+      <Card raised={true} sx={{width: '48em'}}>
         <Stack 
           spacing={3} 
           padding={2} 
@@ -216,13 +212,14 @@ export default function ViewGoal() {
           sx={{justifyContent: 'space-between'}}
         >
           {/* Image display */}
-          <Box sx={{width: '12em'}}>
+          <Box sx={{width: '20em'}}>
             <img 
               src={`${import.meta.env.VITE_IMAGE_BUCKET_URL}/${goal?.imagePath ?? 'default.jpg'}?${Date.now()}`} 
               width='100%' 
             />
           </Box>
 
+          <Box sx={{display: 'flex', width: '24em'}}>
           {isEdit ? ( //Info (editing)
             <Stack spacing={2}>
               <TextField
@@ -271,6 +268,7 @@ export default function ViewGoal() {
                   hidden
                 />
               </Button>
+              {imageData?.name ?? ''}
 
               {/* Button row (editing) */}
               <Stack spacing={2} direction={'row'}>
@@ -284,7 +282,7 @@ export default function ViewGoal() {
                 <Button
                   variant='outlined'
                   color='secondary'
-                  onClick={handleCancelEdit}
+                  onClick={() => setIsEdit(false)}
                 >
                   {t('cancel')}
                 </Button>
@@ -379,6 +377,7 @@ export default function ViewGoal() {
               </Stack>
               
           )}
+          </Box>
 
         </Stack>
 

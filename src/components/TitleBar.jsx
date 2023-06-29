@@ -36,11 +36,11 @@ export default function TitleBar () {
           </Typography>
 
           <MenuItem onClick={() => navigate('/goals')}>
-            <Typography textAlign="center">Active Goals</Typography>
+            <Typography textAlign="center">{t('active-goals')}</Typography>
           </MenuItem>
 
           <MenuItem onClick={() => navigate('/goals/completed')}>
-            <Typography textAlign="center">Completed Goals</Typography>
+            <Typography textAlign="center">{t('past-goals')}</Typography>
           </MenuItem>
         </Stack>
 

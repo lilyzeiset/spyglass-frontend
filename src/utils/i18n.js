@@ -30,8 +30,13 @@ i18n.use(initReactI18next).init({
         "make-deposit": "Make a deposit",
         "upload-image": "Upload image",
         "deposit-amount": "Deposit amount",
-        "goal-completed": "Congratulations! You completed your goal!",
-        "no-completed-goals": "You haven't completed any goals yet!"
+        "goal-completed": "Congratulations! You completed your goal! Redirecting...",
+        "no-completed-goals": "You haven't completed any goals yet!",
+        "goal-reached-by": "Goal reached by",
+        "goal-not-reached-by": "Goal not reached by",
+        "active-goals": "Active Goals",
+        "past-goals": "Past Goals",
+        "required-fields": "Please specify a name and target amount."
       }
     },
     de: {
@@ -59,9 +64,14 @@ i18n.use(initReactI18next).init({
         "make-deposit": "Einzahlung tätigen",
         "upload-image": "Bild hochladen",
         "deposit-amount": "Einzahlungsbetrag",
-        "goal-completed": "Herzlichen Glückwunsch! Sie haben Ihr Ziel erreicht!",
-        "no-completed-goals": "Du hast bisher keine Ziele abgeschlossen!"
-        }
+        "goal-completed": "Herzlichen Glückwunsch! Sie haben Ihr Ziel erreicht! Weiterleitung...",
+        "no-completed-goals": "Du hast bisher keine Ziele abgeschlossen!",
+        "goal-reached-by": "Ziel erreicht bis",
+        "goal-not-reached-by": "Ziel nicht erreicht bis",
+        "active-goals": "Aktive Ziele",
+        "past-goals": "Vergangene Ziele",
+        "required-fields": "Bitte geben Sie einen Namen und einen Zielbetrag an."
+      }
     }
   },
   fallbackLng: "en"

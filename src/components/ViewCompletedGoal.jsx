@@ -48,8 +48,8 @@ export default function ViewCompletedGoal({goal1, refetchGoals1}) {
 
 
   return (
-    <Box>
-      <Box padding={2}>
+    <Stack>
+      <Box padding={2} spacing={2}>
         <Button 
           variant='contained' 
           startIcon={<ArrowBack />}
@@ -59,7 +59,7 @@ export default function ViewCompletedGoal({goal1, refetchGoals1}) {
         </Button>
       </Box>
 
-      <Card raised={true}>
+      <Card raised={true} sx={{width: '48em'}}>
         <Stack 
           spacing={3} 
           padding={2} 
@@ -67,14 +67,14 @@ export default function ViewCompletedGoal({goal1, refetchGoals1}) {
           sx={{justifyContent: 'space-between'}}
         >
           {/* Image display */}
-          <Box sx={{width: '12em'}}>
+          <Box sx={{width: '20em'}}>
             <img 
               src={`${import.meta.env.VITE_IMAGE_BUCKET_URL}/${goal?.imagePath ?? 'default.jpg'}?${Date.now()}`} 
               width='100%' 
             />
           </Box>
 
-          
+          <Box sx={{display: 'flex', width: '24em'}}>
             <Stack spacing={2}>
               <Typography variant='h6' sx={{fontWeight: 'bold'}}>
                 {goal?.name}
@@ -87,17 +87,22 @@ export default function ViewCompletedGoal({goal1, refetchGoals1}) {
               <Typography>
                 ${goal?.currentAmount.toFixed(2)} / ${goal?.targetAmount.toFixed(2)}
               </Typography>
-
-              </Stack>
-              
-
-          {/* Progress Gauge 
-          <Box>
-            <CircularProgress variant="determinate" value={progress} />
+              {Number(goal?.currentAmount) === Number(goal?.targetAmount) ? (
+                <Typography>
+                  {t('goal-reached-by')}&nbsp;
+                  {new Date(goal?.targetDate).toLocaleDateString()}
+                </Typography>
+              ) : (
+                <Typography>
+                  {t('goal-not-reached-by')}&nbsp;
+                  {new Date(goal?.targetDate).toLocaleDateString()}
+                </Typography>
+              )}
+            </Stack>
           </Box>
-                  */}
+
         </Stack>
       </Card>
-    </Box>
+    </Stack>
   )
 }
